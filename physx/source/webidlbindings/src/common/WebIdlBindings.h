@@ -14,11 +14,6 @@
 #include "omnipvd/PxOmniPvd.h"
 #include "pvd/PxPvdTransport.h"
 
-#include "vehicle/Base.h"
-#include "vehicle/DirectDrivetrain.h"
-#include "vehicle/EngineDrivetrain.h"
-#include "vehicle/PhysXIntegration.h"
-
 #include "PxTypeMappings.h"
 
 class PassThroughFilterShader {
@@ -387,30 +382,6 @@ struct PxTopLevelFunctions {
     }
 };
 
-struct PxVehicleTopLevelFunctions {
-
-    static bool InitVehicleExtension(physx::PxFoundation& foundation) {
-        return physx::vehicle2::PxInitVehicleExtension(foundation);
-    }
-
-    static void CloseVehicleExtension() {
-        physx::vehicle2::PxCloseVehicleExtension();
-    }
-
-    static bool VehicleComputeSprungMasses(physx::PxU32 nbSprungMasses, Vector_PxVec3& sprungMassCoordinates, physx::PxReal totalMass, PxVehicleAxesEnum gravityDirection, Vector_PxReal& sprungMasses) {
-        return physx::vehicle2::PxVehicleComputeSprungMasses(nbSprungMasses, sprungMassCoordinates.data(), totalMass, gravityDirection, sprungMasses.data());
-    }
-
-    static physx::PxConvexMesh* VehicleUnitCylinderSweepMeshCreate(const physx::vehicle2::PxVehicleFrame& vehicleFrame, physx::PxPhysics& physics, const physx::PxCookingParams& params) {
-        return physx::vehicle2::PxVehicleUnitCylinderSweepMeshCreate(vehicleFrame, physics, params);
-    }
-
-    static void VehicleUnitCylinderSweepMeshDestroy(physx::PxConvexMesh* mesh) {
-        physx::vehicle2::PxVehicleUnitCylinderSweepMeshDestroy(mesh);
-    }
-
-    static const physx::PxU32 MAX_NB_ENGINE_TORQUE_CURVE_ENTRIES = physx::vehicle2::PxVehicleEngineParams::eMAX_NB_ENGINE_TORQUE_CURVE_ENTRIES;
-};
 
 struct PxExtensionTopLevelFunctions {
     static physx::PxRigidStatic* CreatePlane(physx::PxPhysics &sdk, const physx::PxPlane &plane, physx::PxMaterial &material, const physx::PxFilterData &filterData) {
@@ -419,16 +390,6 @@ struct PxExtensionTopLevelFunctions {
         actor->getShapes(shapes, 1);
         shapes[0]->setSimulationFilterData(filterData);
         return actor;
-    }
-};
-
-struct PxVehicleTireForceParamsExt {
-    static void setFrictionVsSlip(physx::vehicle2::PxVehicleTireForceParams* tireForceParams, int i, int j, float value) {
-        tireForceParams->frictionVsSlip[i][j] = value;
-    }
-
-    static void setLoadFilter(physx::vehicle2::PxVehicleTireForceParams* tireForceParams, int i, int j, float value) {
-        tireForceParams->loadFilter[i][j] = value;
     }
 };
 
@@ -651,5 +612,6 @@ struct CustomSupport : physx::PxGjkQuery::Support {
     private:
         physx::PxVec3 supportBuffer;
 };
+
 
 #endif
